@@ -1,1 +1,1 @@
-SELECT * FROM world.city
+SELECT * FROM sakila.actor
