@@ -3,4 +3,4 @@
 
 USE cd;
 
-SELECT surname, firstname FROM members WHERE DATE(joindate) >= '2012.09.01'
+SELECT DISTINCT surname FROM members ORDER BY surname
