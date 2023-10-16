@@ -1,1 +1,0 @@
-SELECT * FROM world.city LIMIT 3
