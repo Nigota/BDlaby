@@ -1,1 +1,1 @@
-SELECT * FROM world.city
+SELECT * FROM world.city LIMIT 3
