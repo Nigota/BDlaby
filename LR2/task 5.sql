@@ -4,4 +4,4 @@
 
 use cd;
 
-select facility from facilities where membercost < 1 / 50 * monthlymaintenance;
+select facility from facilities where membercost != 0 and membercost < 1 / 50 * monthlymaintenance;
