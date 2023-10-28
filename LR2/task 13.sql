@@ -3,4 +3,4 @@
 
 USE cd;
 
-SELECT surname, firstname, joindate FROM members ORDER BY joindate DESC
+SELECT surname, firstname, joindate FROM members ORDER BY joindate DESC LIMIT 1

@@ -2,7 +2,6 @@
 
 USE cd;
 
-SELECT 
-    MAX(monthlymaintenance) as 'MAX facility cost', 
-    MIN(monthlymaintenance) as 'MIN facility cost' 
-FROM facilities;
+SELECT
+    (SELECT facility FROM facilities ORDER BY monthlymaintenance DESC LIMIT 1) as 'MAX facility cost',
+    (SELECT facility FROM facilities ORDER BY monthlymaintenance ASC LIMIT 1) as 'MIN facility cost'

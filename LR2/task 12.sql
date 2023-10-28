@@ -2,4 +2,4 @@
 
 USE cd;
 
-SELECT joindate FROM members ORDER BY joindate DESC LIMIT 1
+SELECT joindate FROM members ORDER BY joindate DESC LIMIT 1;

@@ -2,6 +2,6 @@
 -- использование не превышает 1/50 от стоимость месячного обслуживания 
 -- (monthlymaintenance).
 
-use cd;
+USE cd;
 
-select facility from facilities where membercost != 0 and membercost < 1 / 50 * monthlymaintenance;
+SELECT * FROM facilities WHERE membercost != 0 AND monthlymaintenance / 50 >= membercost;

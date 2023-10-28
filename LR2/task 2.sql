@@ -2,6 +2,6 @@
 -- использования для членов клуба (membercost) для всех 
 -- зарегистрированных в базе объектах (facilities) клуба.
 
-use cd;
+USE cd;
 
-select facility, membercost from facilities;
+SELECT facility, membercost FROM facilities;

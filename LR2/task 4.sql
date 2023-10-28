@@ -1,5 +1,5 @@
 -- Выбрать объекты, пользование которых платно для членов клуба
 
-use cd;
+USE cd;
 
-select facility from facilities where membercost != 0;
+SELECT facility FROM facilities WHERE membercost != 0;

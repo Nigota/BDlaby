@@ -3,7 +3,6 @@
 
 USE cd;
 
-SELECT DISTINCT facilities.facility, members.firstname
-FROM bookings
-JOIN facilities ON bookings.facid = facilities.facid
-JOIN members ON bookings.memid = members.memid
+SELECT DISTINCT CONCAT(firstname, ' ', surname) as 'Members and Facilities' FROM members WHERE firstname != 'GUEST' OR surname != 'GUEST'
+UNION
+SELECT DISTINCT facility FROM facilities;
