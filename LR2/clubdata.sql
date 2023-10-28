@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS `bookings` (
     slots integer NOT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS facilities (
     facid integer NOT NULL,
     facility character varying(100) NOT NULL,
