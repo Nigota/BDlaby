@@ -4,5 +4,8 @@
 
 USE cd;
 
-
--- Не понял задания
+SELECT DISTINCT CONCAT(m1.surname, " ", m1.firstname) as Member
+  FROM members m1, members m2
+  WHERE (m1.recommendedby = m2.memid OR m1.recommendedby IS NULL)
+        and m1.surname NOT LIKE "GUEST"
+  ORDER BY Member;

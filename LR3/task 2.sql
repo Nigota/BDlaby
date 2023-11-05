@@ -2,7 +2,7 @@
 
 USE cd;
 
-SELECT facility 
+SELECT DISTINCT facility 
 FROM facilities f
     JOIN bookings b ON b.facid = f.facid
-WHERE DATE(starttime) = '2012.09.19' AND facility like '%Court%';
+WHERE DATE(starttime) = '2012.09.19' AND facility like 'Tennis Court%';
