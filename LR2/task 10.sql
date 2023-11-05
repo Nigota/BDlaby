@@ -1,6 +1,5 @@
--- Выбрать всех членов клуба, зарегистрированных с сентября 2012 
--- года.
+/*Выберите 10 фамилий членов клуба упорядочите их по алфавиту без повторов*/
 
 USE cd;
 
-SELECT DISTINCT surname FROM cd.members ORDER BY surname LIMIT 10;
+SELECT DISTINCT surname FROM members WHERE surname != 'Guest' ORDER BY surname LIMIT 10;

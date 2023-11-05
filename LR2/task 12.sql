@@ -2,4 +2,4 @@
 
 USE cd;
 
-SELECT joindate FROM members ORDER BY joindate DESC LIMIT 1;
+SELECT MAX(joindate) AS 'Последняя регистарция' FROM members;

@@ -1,7 +1,5 @@
 -- Выбрать объекты, включаящие слово 'Tennis'.
 
-use cd;
+USE cd;
 
-select facility from facilities where facility like '%Tennis%';
-
-
+SELECT facility FROM facilities WHERE facility LIKE '%Tennis%';

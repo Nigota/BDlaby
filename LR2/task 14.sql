@@ -2,6 +2,8 @@
 
 USE cd;
 
-SELECT
-    (SELECT facility FROM facilities ORDER BY monthlymaintenance DESC LIMIT 1) as 'MAX facility cost',
-    (SELECT facility FROM facilities ORDER BY monthlymaintenance ASC LIMIT 1) as 'MIN facility cost'
+SELECT facility,'MAX facolity cost' AS 'Cost'FROM facilities
+WHERE initialoutlay = (SELECT MAX(initialoutlay)  FROM facilities)
+UNION 
+SELECT facility, 'MIN facility cost' FROM facilities
+WHERE initialoutlay = (SELECT MIN(initialoutlay) FROM facilities);

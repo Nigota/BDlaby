@@ -3,4 +3,6 @@
 
 USE cd;
 
-SELECT surname, firstname, joindate FROM members ORDER BY joindate DESC LIMIT 1
+SELECT firstname, surname, joindate 
+FROM members 
+WHERE joindate = (SELECT MAX(joindate)FROM members);
