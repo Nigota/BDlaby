@@ -2,14 +2,6 @@
 
 USE cd;
 
-SELECT
-  (SELECT facility 
-     FROM facilities
-     WHERE initialoutlay = (SELECT MAX(initialoutlay) 
-                              FROM facilities)
-  ) as 'Дорогой',
-  (SELECT facility 
-     FROM facilities 
-     WHERE initialoutlay = (SELECT MIN(initialoutlay)
-                              FROM facilities)
-  ) as 'Эконом';
+SELECT facility, IF(mini = initialoutlay, "Дешевый", "Дорогой") as "Стоимость"
+  FROM facilities, (SELECT MIN(initialoutlay) as mini, MAX(initialoutlay) as maxi FROM facilities) as m1
+  WHERE initialoutlay IN (mini, maxi);

@@ -4,8 +4,9 @@
 
 USE cd;
 
-SELECT DISTINCT CONCAT(m1.surname, " ", m1.firstname) as Member
-  FROM members m1, members m2
-  WHERE (m1.recommendedby = m2.memid OR m1.recommendedby IS NULL)
-        and m1.surname NOT LIKE "GUEST"
-  ORDER BY Member;
+SELECT CONCAT(m1.surname, ' ', m1.firstname) as 'Член клуба',
+       CONCAT(m2.surname, ' ', m2.firstname) as 'Кем был рекомендован'
+  FROM members m1
+    JOIN members m2 
+      ON m1.recommendedby = m2.memid
+  ORDER BY m1.firstname;
