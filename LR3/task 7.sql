@@ -4,9 +4,11 @@
 
 USE cd;
 
-SELECT CONCAT(m1.surname, ' ', m1.firstname) as 'Член клуба',
-       CONCAT(m2.surname, ' ', m2.firstname) as 'Кем был рекомендован'
-  FROM members m1
-    JOIN members m2 
-      ON m1.recommendedby = m2.memid
-  ORDER BY m1.firstname;
+SELECT CONCAT(m1.surname, ' ', m1.firstname) as Mem,
+  (
+    SELECT CONCAT(m2.surname, ' ', m2.firstname)
+      FROM members AS m2
+      WHERE m2.memid = m1.recommendedby
+  ) as Rec
+  FROM members AS m1
+  ORDER BY Mem;

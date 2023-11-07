@@ -2,7 +2,7 @@
 
 USE cd;
 
-SELECT DISTINCT CONCAT(firstname, ' ', surname) AS 'Members'
+SELECT DISTINCT CONCAT(firstname, ' ', surname) AS 'Clients'
   FROM members m
     JOIN bookings b ON b.memid = m.memid
     JOIN facilities f ON b.facid = f.facid 
