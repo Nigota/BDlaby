@@ -4,9 +4,9 @@
 
 USE cd;
 
-SELECT CONCAT(m1.surname, ' ', m1.firstname) as Mem,
+SELECT DISTINCT CONCAT(m1.surname, ' ', m1.firstname) as Mem,
   (
-    SELECT CONCAT(m2.surname, ' ', m2.firstname)
+    SELECT DISTINCT CONCAT(m2.surname, ' ', m2.firstname)
       FROM members AS m2
       WHERE m2.memid = m1.recommendedby
   ) as Rec
