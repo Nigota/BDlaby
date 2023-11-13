@@ -5,8 +5,6 @@
 
 USE cd;
 
-SELECT @maxid := MAX(facid)
-  FROM facilities;
-
 INSERT facilities(facid, facility, membercost, guestcost, initialoutlay, monthlymaintenance)
-  VALUES (@maxid + 1, "spa", 20, 30, 100000, 800);
+  SELECT MAX(facid) + 1, "spa", 20, 30, 100000, 800
+  FROM facilities;
