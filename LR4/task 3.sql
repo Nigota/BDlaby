@@ -6,5 +6,6 @@
 USE cd;
 
 INSERT facilities(facid, facility, membercost, guestcost, initialoutlay, monthlymaintenance)
-  SELECT MAX(facid) + 1, "spa", 20, 30, 100000, 800
-  FROM facilities;
+  SELECT 12, facility, membercost, guestcost, initialoutlay, monthlymaintenance 
+  FROM facilities 
+  WHERE facility LIKE 'spa';
