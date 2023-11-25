@@ -9,7 +9,8 @@ USE cd;
 
 SELECT b.memid, m.surname, m.firstname,
        ROUND(SUM(slots) / 2, -1) AS fachours,
-       DENSE_RANK() OVER(ORDER BY ROUND(SUM(slots) / 2, -1)) AS ranking
+       RANK() OVER(ORDER BY ROUND(SUM(slots) / 2, -1)) AS ranking,
+       DENSE_RANK() OVER(ORDER BY ROUND(SUM(slots) / 2, -1)) AS dranking
   FROM bookings as b
     LEFT JOIN members AS m ON b.memid = m.memid
   GROUP BY b.memid

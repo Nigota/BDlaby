@@ -11,3 +11,10 @@ SELECT facility,
     LEFT JOIN bookings b ON b.facid = f.facid
   GROUP BY f.facility 
   ORDER BY income;
+
+SELECT facility, 
+       SUM(IF(b.memid = 0, f.guestcost * b.slots, f.membercost * b.slots)) AS income 
+  FROM facilities f
+    JOIN bookings b ON b.facid = f.facid
+  GROUP BY f.facility 
+  ORDER BY income;

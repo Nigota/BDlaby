@@ -3,4 +3,8 @@
 USE cd;
 
 SELECT COUNT(DISTINCT book.memid) as mem_count
-FROM bookings as book;
+  FROM bookings AS book;
+
+SELECT DISTINCT CONCAT(m.surname, " ", m.firstname) AS People
+  FROM members AS m
+    LEFT JOIN bookings AS b ON b.memid = m.memid

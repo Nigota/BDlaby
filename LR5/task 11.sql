@@ -11,3 +11,9 @@ SELECT b.facid, f.facility, ROUND(SUM(b.slots) / 2, 2) AS 'Заброниров�
     LEFT JOIN facilities f ON b.facid = f.facid
   GROUP BY b.facid
   ORDER BY b.facid;
+
+SELECT b.facid, f.facility, FORMAT(SUM(b.slots) / 2, 2) AS 'Забронированные часы'
+  FROM bookings b
+    LEFT JOIN facilities f ON b.facid = f.facid
+  GROUP BY b.facid
+  ORDER BY b.facid;

@@ -15,7 +15,7 @@ WITH tmp AS (
     WHERE MONTH(b.starttime) IN (7, 8)
     GROUP BY dayMonth
     WINDOW w AS (
-      ORDER BY DATE_FORMAT(b.starttime, '%m %d') ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+      ORDER BY DATE_FORMAT(b.starttime, '%m %d') ROWS BETWEEN 14 PRECEDING AND CURRENT ROW
     )
     ORDER BY dayMonth)
 SELECT * FROM tmp WHERE SUBSTRING(dayMonth, 1, 2) = '08';
