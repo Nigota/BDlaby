@@ -3,7 +3,7 @@
 USE cd;
 
 SELECT facility, SUM(book.slots) as rent_count,
-    MONTH(book.starttime) as month
+    DATE_FORMAT(book.starttime, "%m %Y") as date
   FROM facilities as fac
     JOIN bookings as book ON book.facid = fac.facid
-  GROUP BY fac.facid, month;
+  GROUP BY fac.facid, date;
