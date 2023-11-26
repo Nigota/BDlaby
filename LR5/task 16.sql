@@ -9,7 +9,7 @@ SELECT f.facility,
        DENSE_RANK() OVER(
         ORDER BY SUM(
                      IF(b.memid = 0, f.guestcost, f.membercost) * b.slots
-                 ) - f.monthlymaintenance * COUNT(DISTINCT MONTH(b.starttime)) DESC
+                 ) - f.monthlymaintenance * COUNT(DISTINCT DATE_FORMAT(b.starttime, "%m/%Y")) DESC
        ) AS ranking
   FROM bookings AS b
     JOIN facilities AS f ON b.facid = f.facid

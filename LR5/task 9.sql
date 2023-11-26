@@ -6,7 +6,9 @@
 USE cd;
 
 SELECT facility, 
-       SUM(IF(b.memid = 0, f.guestcost * b.slots, f.membercost * b.slots)) AS income 
+       IFNULL(
+        SUM(IF(b.memid = 0, f.guestcost * b.slots, f.membercost * b.slots)), 0
+        ) AS income
   FROM facilities f
     LEFT JOIN bookings b ON b.facid = f.facid
   GROUP BY f.facility
