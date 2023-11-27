@@ -10,6 +10,8 @@ DELIMITER //
 DROP FUNCTION IF EXISTS cost_of //
 CREATE FUNCTION cost_of(cost DECIMAL, slots INT)
 RETURNS INT
+DETERMINISTIC
+READS SQL DATA
 BEGIN
   DECLARE income INT;
 
@@ -19,10 +21,10 @@ BEGIN
 
 END; //
 
-DELIMITER ;
+DELIMITER;
 
 
-SELECT cost_of(
+SELECT bookid, cost_of(
     IF(b.memid = 0, f.guestcost, f.membercost), b.slots
 )
   FROM bookings AS b
