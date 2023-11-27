@@ -18,6 +18,14 @@ WITH income_per_month AS (
     WHERE YEAR(b.starttime) = 2012
     GROUP BY f.facid, month
     )
-SELECT facid, IFNULL(month, 'Total') as month, SUM(sum_slots) as slots
+SELECT facid, IF(GROUPING(month) = 1, 'Total', month) as month, SUM(sum_slots) as slots
   FROM income_per_month
   GROUP BY facid, month WITH ROLLUP;
+
+SELECT f.facid,
+    IF(GROUPING(MONTH(b.starttime)) = 1, "TOTAL", "MONTH(b.starttime)"),
+    SUM(b.slots) as sum_slots
+    FROM facilities f
+      JOIN bookings b ON f.facid = b.facid
+    WHERE YEAR(b.starttime) = 2012
+    GROUP BY f.facid, MONTH(b.starttime) WITH ROLLUP;
