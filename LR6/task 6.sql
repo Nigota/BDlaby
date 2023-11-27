@@ -5,4 +5,4 @@ USE cd;
 
 SELECT facility AS 'Объекты'
   FROM facilities
-  WHERE LOWER(facility) LIKE '%tennis%';
+  WHERE facility LIKE '%tennis%';

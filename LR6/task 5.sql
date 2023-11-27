@@ -5,4 +5,4 @@ USE cd;
 
 SELECT UPPER(facility) AS 'Названия c заглавными буквами'
   FROM facilities 
-  WHERE facility LIKE '%Tennis%';
+  WHERE facility LIKE BINARY '%Tennis%';
