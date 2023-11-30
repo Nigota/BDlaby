@@ -5,27 +5,30 @@
 
 USE cd;
 
+drop function if exists HelloWorld;
+
 DELIMITER //
 
-DROP FUNCTION IF EXISTS cost_of //
-CREATE FUNCTION cost_of(cost DECIMAL, slots INT)
-RETURNS INT
-DETERMINISTIC
-READS SQL DATA
+CREATE FUNCTION HelloWorld() RETURNS VARCHAR(20)
+    DETERMINISTIC
 BEGIN
-  DECLARE income INT;
+    DECLARE result varchar(30);  
+ SET result = 'HELLO WORLD';
+ 
+ RETURN (result); 
+END//
 
-  SET income = cost * slots;
-  
-  RETURN income;
+DELIMITER ;
 
-END; //
+select HelloWorld();
 
-DELIMITER;
+DELIMITER //
 
-
-SELECT bookid, cost_of(
-    IF(b.memid = 0, f.guestcost, f.membercost), b.slots
-)
-  FROM bookings AS b
-    JOIN facilities AS f ON f.facid = b.facid;
+DROP FUNCTION IF EXISTS cost_of;
+CREATE FUNCTION cost_of(a INT, b INT) RETURNS INT
+  NOT DETERMENISTIC
+  BEGIN
+    DECLARE income INT;
+    SET income = a * b;
+    RETURN (income);
+  END //
