@@ -23,3 +23,4 @@ DELIMITER ;
 
 SELECT cost_of(memid, facid, slots)
   FROM bookings;
+  
