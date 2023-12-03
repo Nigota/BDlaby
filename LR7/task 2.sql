@@ -15,17 +15,17 @@
 USE cd;
 
 -- Создание новой таблицы
--- CREATE TABLE payments
--- (
--- 	payid INT PRIMARY KEY AUTO_INCREMENT,
---  bookid INT,
--- 	payment DECIMAL,
--- 	FOREIGN KEY (bookid) REFERENCES bookings(bookid)
--- );
+CREATE TABLE payments
+(
+	payid INT PRIMARY KEY AUTO_INCREMENT,
+ bookid INT,
+	payment DECIMAL,
+	FOREIGN KEY (bookid) REFERENCES bookings(bookid)
+);
 
--- Добавление столбца
--- ALTER TABLE bookings
--- ADD payed BOOLEAN DEFAULT 0;
+Добавление столбца
+ALTER TABLE bookings
+ADD payed BOOLEAN DEFAULT 0;
 
 DELIMITER //
 
@@ -35,7 +35,7 @@ CREATE TRIGGER not_delete_if_false
   BEFORE DELETE ON bookings FOR EACH ROW 
   BEGIN
     CASE
-	    WHEN OLD.payed = 0 THEN SIGNAL SQLSTATE '45000' SET message_text='Аренда еще не оплачена!';
+	    WHEN OLD.payed = 1 THEN SIGNAL SQLSTATE '45000' SET message_text='Аренда уже оплачена!';
 	    ELSE BEGIN END;
     END CASE;
   END //
@@ -58,9 +58,9 @@ CREATE TRIGGER on_pay_status
 DELIMITER ;
 
 -- Изменение статуса записей
--- UPDATE bookings
---   SET payed = 1
---   WHERE DATE(starttime) < '2012-08-01' AND DATE(starttime) >= '2012-07-01';
+UPDATE bookings
+  SET payed = 1
+  WHERE DATE(starttime) < '2012-08-01' AND DATE(starttime) >= '2012-07-01';
 
 -- Подсчет суммы
 SELECT SUM(payment) FROM payments;
