@@ -13,10 +13,9 @@ CREATE PROCEDURE income_of_all()
   NOT DETERMINISTIC
   BEGIN
     SELECT b.facid, f.facility,
-        SUM(
-            IF(b.memid = 0, f.guestcost, f.membercost) * b.slots
-        ) - f.monthlymaintenance AS income
+        SUM(p.payment) - f.monthlymaintenance AS income
       FROM bookings AS b
+        JOIN payments AS p ON b.bookid = p.bookid
         JOIN facilities AS f ON b.facid = f.facid
       WHERE DATE(starttime) < '2012-08-01' AND DATE(starttime) >= '2012-07-01'
       GROUP BY b.facid
