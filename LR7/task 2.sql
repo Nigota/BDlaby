@@ -49,9 +49,21 @@ CREATE TRIGGER on_pay_status
       WHEN NEW.payed = OLD.payed THEN BEGIN END;
       WHEN NEW.payed = 1
         THEN INSERT INTO payments(bookid, payment)
-              SELECT NEW.bookid, cost_of(memid, facid, slots)
-                FROM bookings WHERE bookings.bookid = NEW.bookid LIMIT 1;
+              NEW.bookid, cost_of(NEW.memid, NEW.facid, NEW.slots)
       ELSE DELETE FROM payments WHERE payments.bookid = NEW.bookid;
+    END CASE;
+  END //
+
+-- Триггер на добавление новой записи в букинг, если оно сразу оплачено
+DROP TRIGGER IF EXISTS on_insert //
+CREATE TRIGGER on_insert
+  AFTER INSERT ON bookings FOR EACH ROW
+  BEGIN
+    CASE
+      WHEN NEW.payed = 1
+        THEN INSERT INTO payments(bookid, payment)
+              NEW.bookid, cost_of(NEW.memid, NEW.facid, NEW.slots)
+      ELSE BEGIN END;
     END CASE;
   END //
 
