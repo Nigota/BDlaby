@@ -22,4 +22,4 @@ CREATE PROCEDURE income_of_all(curfacid INT, whichDate DATE)
       GROUP BY b.facid;
   END //
 
-CALL income_of_all(1, '2012-07-03');
+CALL income_of_all(4, '2012-07-03');
