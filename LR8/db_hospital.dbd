@@ -1,0 +1,28 @@
+Room
+-
+roomID int PK
+number int
+bedCnt int
+department varchar(100)
+bedOccupiedCnt int
+lastDate timestamp
+gender boolean
+
+Doctor
+-
+doctorID int PK
+fullName varchar(100)
+department varchar(100)
+
+Patient
+-
+patientID int PK
+fullName varchar(100)
+gender boolean
+policy varchar(100)
+startTime timestamp
+roomID int FK > Room.roomID
+doctorID int FK > Doctor.doctorID
+diagnosis varchar(100)
+endTime int
+POSITION({"Customer":{"x":50,"y":50,"w":230},"Order":{"x":330,"y":50,"w":230},"OrderLine":{"x":610,"y":50,"w":230},"Hospital":{"x":610,"y":50,"w":230},"Room":{"x":610,"y":50,"w":230},"Doctor":{"x":50,"y":260,"w":230},"Patient":{"x":330,"y":260,"w":230}})
