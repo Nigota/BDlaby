@@ -25,11 +25,6 @@ k - нам извесно (по старым данным), для просто�
 
 USE cd;
 
--- задаем долю на которую изменяем срок окупаемости (в процентах)
-
-SET @start = CAST('2012-07-01' AS DATETIME);
-SET @end = CAST('2012-07-31-23:59:59' AS DATETIME);
-
 DELIMITER //
 
 -- получаем количество гостей за период
@@ -121,7 +116,7 @@ CREATE FUNCTION income_of(facid INT, starttime TIMESTAMP, endtime TIMESTAMP)
 
 -- считаем коэффициент соотношения цены гостей и участников
 DROP FUNCTION IF EXISTS get_k //
-CREATE FUNCTION IF EXISTS get_k(facid INT, starttime TIMESTAMP, endtime TIMESTAMP)
+CREATE FUNCTION get_k(facid INT, starttime TIMESTAMP, endtime TIMESTAMP)
   RETURNS FLOAT
   READS SQL DATA
   NOT DETERMINISTIC
@@ -135,62 +130,59 @@ CREATE FUNCTION IF EXISTS get_k(facid INT, starttime TIMESTAMP, endtime TIMESTAM
     RETURN mem_cost / guest_cost;
   END//
 
--- считаем новую цену объекта
-DROP FUNCTION IF EXISTS increase_income_by //
-CREATE FUNCTION increase_income_by(facid INT, fraction FLOAT, starttime TIMESTAMP, endtime TIMESTAMP)
-  RETURNS DECIMAL(10, 0);
+-- получаем новую дату конца периода
+DROP FUNCTION IF EXISTS get_new_end //
+CREATE FUNCTION get_new_end(starttime TIMESTAMP, endtime TIMESTAMP, fraction FLOAT)
+  RETURNS TIMESTAMP
   READS SQL DATA
   NOT DETERMINISTIC
   BEGIN
-    DECLARE guestcnt_inperiod INT;
-    DECLARE memcnt_inperiod INT;
+    DECLARE new_end TIMESTAMP;
+
+    SELECT DATE_ADD(starttime, INTERVAL
+        ROUND(DATEDIFF(endtime, starttime) * fraction) DAY) INTO new_end;
+
+    RETURN new_end;
+  END//
+
+-- считаем новую цену объекта
+DROP FUNCTION IF EXISTS increase_income_by //
+CREATE FUNCTION increase_income_by(facid INT, fraction FLOAT, starttime TIMESTAMP, endtime TIMESTAMP)
+  RETURNS VARCHAR(50)
+  READS SQL DATA
+  NOT DETERMINISTIC
+  BEGIN
     DECLARE income DECIMAL(10, 0);
     DECLARE new_end TIMESTAMP;
     DECLARE new_guestcnt INT;
     DECLARE new_memcnt INT;
     DECLARE k FLOAT;
+    DECLARE g DECIMAL (10, 2);
+    DECLARE m DECIMAL (10, 2);
 
-    SELECT get_guestcnt_inperiod(facid, starttime, endtime) INTO guestcnt_inperiod;
-    SELECT get_memcnt_inperiod(facid, starttime, endtime) INTO memcnt_inperiod;
     SELECT income_of(facid, starttime, endtime) INTO income;
-    SELECT DATE_ADD(starttime, INTERVAL
-        ROUND(DATEDIFF(endtime, starttime) * fraction) DAY) INTO new_end;
+    SELECT get_new_end(starttime, endtime, fraction) INTO new_end;
     SELECT get_guestcnt_inperiod(facid, starttime, new_end) INTO new_guestcnt;
     SELECT get_memcnt_inperiod(facid, starttime, new_end) INTO new_memcnt;
     SELECT get_k(facid, starttime, endtime) INTO k;
 
-    RETURN new_end;
+    SELECT income / (new_guestcnt + k * new_memcnt) INTO g;
+    SELECT g * k INTO m;
+
+    RETURN CONCAT(m, ';', g);
   END //
 
 DELIMITER ;
 
-SELECT increase_income_by(4, 0.5, @start, @end);
+-- задаем долю на которую изменяем срок окупаемости (в процентах)
+SET @start = CAST('2012-07-01' AS DATETIME);
+SET @end = CAST('2012-07-31-23:59:59' AS DATETIME);
+
+SELECT increase_income_by(4, 0.5, @start, @end)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/output.csv' 
+FIELDS ENCLOSED BY '"' 
+TERMINATED BY ';' 
+ESCAPED BY '"' 
+LINES TERMINATED BY '\r\n';
 
 
--- доход от гостей, от участников
-SELECT f.facid, f.facility, COUNT(b.memid),
-      SUM(
-        IF(b.memid = 0, f.guestcost, 0) * b.slots
-      ) AS income_guest
-  FROM bookings AS b
-    JOIN facilities AS f ON b.facid = f.facid
-  WHERE b.memid = 0 AND f.facid = 4 AND DATE(starttime) < '2012-08-01' AND DATE(starttime) >= '2012-07-01'
-  GROUP BY b.facid;
-
-SELECT f.facid, f.facility, COUNT(b.memid),
-      SUM(
-        IF(b.memid = 0, 0, f.membercost) * b.slots
-      ) AS income_mem
-  FROM bookings AS b
-    JOIN facilities AS f ON b.facid = f.facid
-  WHERE b.memid != 0 AND f.facid = 4 AND DATE(starttime) < '2012-08-01' AND DATE(starttime) >= '2012-07-01'
-  GROUP BY b.facid;
-
-SELECT f.facid, f.facility, COUNT(b.memid),
-      SUM(
-        IF(b.memid = 0, f.guestcost, f.membercost) * b.slots
-      ) - f.monthlymaintenance AS income
-  FROM bookings AS b
-    JOIN facilities AS f ON b.facid = f.facid
-  WHERE f.facid = 4 AND DATE(starttime) < '2012-08-01' AND DATE(starttime) >= '2012-07-01'
-  GROUP BY b.facid;
