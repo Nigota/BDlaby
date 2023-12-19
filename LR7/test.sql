@@ -14,22 +14,11 @@
 
 USE cd;
 
--- Создание новой таблицы
-CREATE TABLE payments
-(
-	payid INT PRIMARY KEY AUTO_INCREMENT,
-  bookid INT,
-	payment DECIMAL,
-	FOREIGN KEY (bookid) REFERENCES bookings(bookid) ON DELETE RESTRICT
-);
-
--- Добавление столбца
-ALTER TABLE bookings
-ADD payed BOOLEAN DEFAULT 0;
-
 DELIMITER //
 
 -- Триггер на изменение статуса оплаты
+DROP TRIGGER IF EXISTS not_delete_if_false //
+
 DROP TRIGGER IF EXISTS on_pay_status //
 CREATE TRIGGER on_pay_status
   AFTER UPDATE ON bookings FOR EACH ROW
@@ -58,10 +47,6 @@ CREATE TRIGGER on_insert
 
 DELIMITER ;
 
--- Изменение статуса записей
-UPDATE bookings
-  SET payed = 1
-  WHERE DATE(starttime) < '2012-08-01' AND DATE(starttime) >= '2012-07-01';
 
 -- Подсчет суммы
 SELECT SUM(payment) FROM payments;
