@@ -12,13 +12,17 @@ CREATE PROCEDURE income_of_all(curfacid INT, m INT, y INT)
   READS SQL DATA
   NOT DETERMINISTIC
   BEGIN
-    SELECT b.starttime AS income
-      FROM payments AS p
-        JOIN bookings AS b ON b.bookid = p.bookid
-        JOIN facilities AS f ON b.facid = f.facid
-      WHERE curfacid = b.facid AND
-        MONTH(starttime) = m AND YEAR(starttime) = y
-      GROUP BY b.facid;
+    WITH tmp AS(
+      SELECT b.starttime AS date, SUM(p.payment) OVER (
+      ROWS BETWEEN unbounded preceding and current row) - f.initialoutlay AS income
+        FROM payments AS p
+          JOIN bookings AS b ON b.bookid = p.bookid
+          JOIN facilities AS f ON b.facid = f.facid
+        WHERE curfacid = b.facid AND
+          MONTH(starttime) = m AND YEAR(starttime) = y
+        ORDER BY b.starttime
+        )
+    SELECT date FROM tmp WHERE income > 0 LIMIT 1;
   END //
 
 CALL income_of_all(4, MONTH('2012-07-03'), YEAR('2012-07-03'));
