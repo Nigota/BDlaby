@@ -12,7 +12,7 @@ CREATE PROCEDURE income_of_all(curfacid INT, m INT, y INT)
   READS SQL DATA
   NOT DETERMINISTIC
   BEGIN
-    SELECT SUM(p.payment) - f.monthlymaintenance AS income
+    SELECT b.starttime AS income
       FROM payments AS p
         JOIN bookings AS b ON b.bookid = p.bookid
         JOIN facilities AS f ON b.facid = f.facid
