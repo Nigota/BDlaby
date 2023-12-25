@@ -23,5 +23,3 @@ START TRANSACTION;
   
   CALL income_of_all(4, MONTH('2012-08-03'), YEAR('2012-08-03'));
 ROLLBACK;
-
-SELECT * 
