@@ -12,7 +12,9 @@ CREATE PROCEDURE income_of_all(curfacid INT, m INT, y INT)
   READS SQL DATA
   NOT DETERMINISTIC
   BEGIN
-    SELECT f.initialoutlay / (SUM(p.payment) - f.monthlymaintenance) AS income
+    SELECT 
+        IF (SUM(p.payment) - f.monthlymaintenance = 0, 10000000000000,
+            f.initialoutlay / (SUM(p.payment) - f.monthlymaintenance)) AS income
       FROM payments AS p
         JOIN bookings AS b ON b.bookid = p.bookid
         JOIN facilities AS f ON b.facid = f.facid
