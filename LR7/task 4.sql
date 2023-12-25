@@ -11,7 +11,7 @@ USE cd;
 DELIMITER //
 
 DROP FUNCTION IF EXISTS increase_income_by //
-CREATE FUNCTION increase_income_by(facid INT, fraction FLOAT, starttime TIMESTAMP, endtime TIMESTAMP)
+CREATE FUNCTION increase_income_by(facid INT, fraction FLOAT, curtime TIMESTAMP)
   RETURNS VARCHAR(50)
   READS SQL DATA
   NOT DETERMINISTIC
@@ -28,7 +28,7 @@ CREATE FUNCTION increase_income_by(facid INT, fraction FLOAT, starttime TIMESTAM
         JOIN bookings AS b ON b.bookid = p.bookid
         JOIN facilities AS f ON b.facid = f.facid
       WHERE facid = b.facid AND
-        b.starttime BETWEEN starttime AND endtime
+        b.starttime <= curtime
       GROUP BY b.facid;
 
     IF income IS NULL THEN RETURN 1;
@@ -36,7 +36,7 @@ CREATE FUNCTION increase_income_by(facid INT, fraction FLOAT, starttime TIMESTAM
 
 
     -- расходы на обслуживание за все время эксплуатации объекта (с точностью до дня)
-    SELECT f.monthlymaintenance * (MONTH(endtime) - MONTH(starttime) + 1) INTO maintenance
+    SELECT f.monthlymaintenance * (MONTH(curtime) - MONTH(MIN(b.starttime)) + 1) INTO maintenance
       FROM facilities AS f
         JOIN bookings AS b ON b.facid = f.facid
       WHERE facid = b.facid
@@ -65,7 +65,7 @@ CREATE FUNCTION increase_income_by(facid INT, fraction FLOAT, starttime TIMESTAM
 
 DELIMITER ;
 
-SELECT increase_income_by(2, 2, '2012-07-01','2012-07-31-23:59:59')
+SELECT increase_income_by(2, 2, '2012-07-31-23:59:59')
 INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/output.csv' 
 FIELDS ENCLOSED BY '"' 
 TERMINATED BY ';' 

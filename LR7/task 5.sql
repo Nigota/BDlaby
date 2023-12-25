@@ -9,23 +9,19 @@ Task-7-3 . Сравните, совпадают ли расчетные данн
 USE cd;
 
 START TRANSACTION;
-  CALL income_of_all(4, MONTH('2012-08-03'), YEAR('2012-08-03'));
+  CALL income_of_all(4, MONTH('2012-07-03'), YEAR('2012-07-03'));
 
   SET @k = 2;
-  SET @starttime = '2012-07-01';
-  SET @endtime = '2012-07-31-23:59:59'
+  SET @curtime = '2012-07-31-23:59:59';
   UPDATE facilities
-    SET guestcost = guestcost * (SELECT increase_income_by(facid, @k, @starttime, @endtime)),
-    membercost = membercost * (SELECT increase_income_by(facid, @k, @starttime, @endtime));
+    SET guestcost = guestcost * (SELECT increase_income_by(facid, @k, @curtime)),
+    membercost = membercost * (SELECT increase_income_by(facid, @k, @curtime));
+
+  UPDATE bookings
+    SET payed = 1
+    WHERE DATE(starttime) < '2012-09-01' AND DATE(starttime) >= '2012-08-01';
   
   CALL income_of_all(4, MONTH('2012-08-03'), YEAR('2012-08-03'));
-  
-  -- UPDATE bookings
-  --   SET payed = 1
-  --   WHERE DATE(starttime) < '2012-09-01' AND DATE(starttime) >= '2012-08-01';
-
-  CALL income_of_all(4, MONTH('2012-08-03'), YEAR('2012-08-03'));
-
-
-  
 ROLLBACK;
+
+SELECT * 
